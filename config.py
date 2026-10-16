@@ -17,9 +17,6 @@ class Settings(BaseSettings):
     OPEN_WEBUI_SECRET_KEY: str
     # CALDAV
     CALDAV_BEARER_TOKEN: str
-    # HOME ASSISTANT
-    HAOS_TOKEN: str
-    HOME_ASSISTANT_URL: str
     # MODELS
     OLLAMA_BASE_URL: str
     OLLAMA_KEEP_ALIVE: int = Field(default=900)
@@ -32,7 +29,6 @@ class Settings(BaseSettings):
     USE_KNOWLEDGE_READER_SUBAGENT: bool = False
     USE_SEARCH_SUBAGENT: bool = False
     USE_WEATHER_SUBAGENT: bool = False
-    USE_HAOS_SUBAGENT: bool = True
 
     model_config = SettingsConfigDict(
         env_file=".env" if os.path.exists(".env") else None,
