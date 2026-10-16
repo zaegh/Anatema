@@ -109,7 +109,6 @@ def get_supervisor_system_prompt():
         "weather_worker": "weather forecasts.",
         "knowledge_reader": "search or consult the knowledge base.",
         "knowledge_writer": "save, edit, or delete notes in the knowledge base.",
-        "home_assistant_worker": "manage home automations, control smart devices, or query states.",
     }
     feature_flags = {
         "email_reader": settings.USE_EMAIL_READER_SUBAGENT,
@@ -119,7 +118,6 @@ def get_supervisor_system_prompt():
         "weather_worker": settings.USE_WEATHER_SUBAGENT,
         "knowledge_reader": settings.USE_KNOWLEDGE_READER_SUBAGENT,
         "knowledge_writer": settings.USE_KNOWLEDGE_WRITER_SUBAGENT,
-        "home_assistant_worker": settings.USE_HAOS_SUBAGENT,
     }
     active_workers = [
         f"- {name}: {description}"
