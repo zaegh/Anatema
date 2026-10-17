@@ -1,0 +1,33 @@
+services:
+  anatema:
+    image: ghcr.io/zaegh/anatema:latest
+    container_name: anatema
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
+      - OPEN_WEBUI_SECRET_KEY=${OPEN_WEBUI_SECRET_KEY}
+      - CALDAV_BEARER_TOKEN=${CALDAV_BEARER_TOKEN}
+    networks:
+      - ai_net
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; resp = urllib.request.urlopen('http://localhost:8000/health'); exit(0 if resp.status == 204 else 1)"]
+      interval: 60s
+      timeout: 2s
+      retries: 5
+      start_period: 6s
+    labels:
+      - homepage.group=Anatema
+      - homepage.name=Anatema
+      - homepage.icon=qwen.webp
+      - homepage.weight=0
+
+networks:
+  ai_net:
+    external: true
