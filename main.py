@@ -27,11 +27,10 @@ app.include_router(chat_router, prefix="/api/v1")
 async def health_check():
     try:
         local_mcp_urls = [
-            "http://imap_mcp:8001/health",
-            "http://online_search_mcp:8002/health",
-            "http://weather_mcp:8003/health",
+            "http://imap_mcp:8000/health",
+            "http://weather_mcp:8000/health",
             "http://caldav_mcp:3000/health",
-            "http://knowledge_mcp:8004/health",
+            "http://knowledge_mcp:8000/health",
         ]
         async with httpx.AsyncClient() as client:
             results = [await client.get(url, timeout=10) for url in local_mcp_urls]
