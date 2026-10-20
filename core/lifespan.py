@@ -31,11 +31,11 @@ async def lifespan(app: FastAPI):
         client = MultiServerMCPClient(
             {
                 "imap": {
-                    "url": "http://imap_mcp:8001/sse",
+                    "url": "http://imap_mcp:8000/sse",
                     "transport": "sse",
                 },
                 "online_search": {
-                    "url": "http://online_search_mcp:8002/sse",
+                    "url": "http://online_search_mcp:8000/sse",
                     "transport": "sse",
                 },
                 "caldav": {
@@ -46,11 +46,11 @@ async def lifespan(app: FastAPI):
                     },
                 },
                 "weather": {
-                    "url": "http://weather_mcp:8003/sse",
+                    "url": "http://weather_mcp:8000/sse",
                     "transport": "sse",
                 },
                 "knowledge": {
-                    "url": "http://knowledge_mcp:8004/sse",
+                    "url": "http://knowledge_mcp:8000/sse",
                     "transport": "sse",
                     "headers": {"X-Assistant-Id": settings.POSTGRES_DB},
                 },

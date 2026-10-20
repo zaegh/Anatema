@@ -48,6 +48,6 @@ def create_online_search_worker(tools):
             )
             return response["messages"][-1].content
         tools_map = {t.name: t for t in tools}
-        return await tools_map.get("online_search").ainvoke({"query": query})
+        return await tools_map.get("web_search").ainvoke({"query": query})
 
     return online_search_worker
