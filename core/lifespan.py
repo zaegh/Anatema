@@ -35,8 +35,8 @@ async def lifespan(app: FastAPI):
                     "transport": "sse",
                 },
                 "online_search": {
-                    "url": "http://online_search_mcp:8000/sse",
-                    "transport": "sse",
+                    "url": "http://online_search_mcp:8000/mcp",
+                    "transport": "http",
                 },
                 "caldav": {
                     "url": "http://caldav_mcp:3000/mcp",
@@ -60,7 +60,7 @@ async def lifespan(app: FastAPI):
         worker_tools = [
             *create_caldav_worker(await client.get_tools(server_name="caldav")),
             *create_email_workers(await client.get_tools(server_name="imap")),
-            create_online_search_worker(
+            *create_online_search_worker(
                 await client.get_tools(server_name="online_search")
             ),
             create_weather_worker(await client.get_tools(server_name="weather")),
