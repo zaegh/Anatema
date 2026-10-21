@@ -19,6 +19,13 @@ app = FastAPI(
     redoc_url=settings.REDOC_URL,
 )
 
+
+class HealthCheckFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        return not "/health" in record.getMessage()
+logging.getLogger("uvicorn.access").addFilter(HealthCheckFilter())
+
+
 app.include_router(chat_router, prefix="/api/v1")
 
 
