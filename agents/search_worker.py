@@ -23,7 +23,6 @@ def create_online_search_worker(tools):
         max_tokens=1000,
     )
 
-    search_worker_agent = None
     if settings.USE_SEARCH_SUBAGENT:
         search_worker_agent = create_agent(
             model=model.with_fallbacks([fallback_model]),
@@ -35,19 +34,19 @@ def create_online_search_worker(tools):
             ),
         )
 
-    @tool(parse_docstring=True)
-    async def online_search_worker(query: str) -> str:
-        """Use this tool for any information search on the web, websites, company data, or online VAT numbers/tax IDs.
+        @tool(parse_docstring=True)
+        async def online_search_worker(query: str) -> str:
+            """Use this tool for any information search on the web, websites, company data, or online VAT numbers/tax IDs.
 
-        Args:
-            query: The search query or the information to search on the internet.
-        """
-        if search_worker_agent:
+            Args:
+                query: The search query or the information to search on the internet.
+            """
+
             response = await search_worker_agent.ainvoke(
                 {"messages": [HumanMessage(content=query)]}
             )
             return response["messages"][-1].content
-        tools_map = {t.name: t for t in tools}
-        return await tools_map.get("online_search").ainvoke({"query": query})
 
-    return online_search_worker
+        return [online_search_worker]
+    else:
+        return tools

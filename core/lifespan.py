@@ -31,12 +31,12 @@ async def lifespan(app: FastAPI):
         client = MultiServerMCPClient(
             {
                 "imap": {
-                    "url": "http://imap_mcp:8001/sse",
+                    "url": "http://imap_mcp:8000/sse",
                     "transport": "sse",
                 },
                 "online_search": {
-                    "url": "http://online_search_mcp:8002/sse",
-                    "transport": "sse",
+                    "url": "http://online_search_mcp:8000/mcp",
+                    "transport": "http",
                 },
                 "caldav": {
                     "url": "http://caldav_mcp:3000/mcp",
@@ -46,11 +46,11 @@ async def lifespan(app: FastAPI):
                     },
                 },
                 "weather": {
-                    "url": "http://weather_mcp:8003/sse",
+                    "url": "http://weather_mcp:8000/sse",
                     "transport": "sse",
                 },
                 "knowledge": {
-                    "url": "http://knowledge_mcp:8004/sse",
+                    "url": "http://knowledge_mcp:8000/sse",
                     "transport": "sse",
                     "headers": {"X-Assistant-Id": settings.POSTGRES_DB},
                 },
@@ -60,7 +60,7 @@ async def lifespan(app: FastAPI):
         worker_tools = [
             *create_caldav_worker(await client.get_tools(server_name="caldav")),
             *create_email_workers(await client.get_tools(server_name="imap")),
-            create_online_search_worker(
+            *create_online_search_worker(
                 await client.get_tools(server_name="online_search")
             ),
             create_weather_worker(await client.get_tools(server_name="weather")),

@@ -1,6 +1,5 @@
 import logging
 
-import httpx
 from fastapi import FastAPI, Response, status
 from sqlalchemy import text
 
@@ -20,27 +19,22 @@ app = FastAPI(
     redoc_url=settings.REDOC_URL,
 )
 
+
+class HealthCheckFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        return not "/health" in record.getMessage()
+logging.getLogger("uvicorn.access").addFilter(HealthCheckFilter())
+
+
 app.include_router(chat_router, prefix="/api/v1")
 
 
 @app.get("/health")
 async def health_check():
     try:
-        local_mcp_urls = [
-            "http://imap_mcp:8001/health",
-            "http://online_search_mcp:8002/health",
-            "http://weather_mcp:8003/health",
-            "http://caldav_mcp:3000/health",
-            "http://knowledge_mcp:8004/health",
-        ]
-        async with httpx.AsyncClient() as client:
-            results = [await client.get(url, timeout=10) for url in local_mcp_urls]
         with get_db_context() as db:
             db.execute(text("SELECT 1"))
-            results.append(True)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
     except Exception:
         logger.exception("Errore durante l'healthcheck di Anatema")
-        results = [False]
-    if all(results):
-        return Response(status_code=status.HTTP_204_NO_CONTENT)
-    return Response(status_code=status.HTTP_417_EXPECTATION_FAILED)
+        return Response(status_code=status.HTTP_417_EXPECTATION_FAILED)
